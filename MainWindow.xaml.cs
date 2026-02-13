@@ -156,7 +156,6 @@ namespace StardewHubInstaller
                 TxtFinalTitle.Text = isEng ? "Installation Complete!" : "Установка завершена!";
                 ShortcutCheck.Content = isEng ? "Create Desktop Shortcut" : "Создать ярлык на рабочем столе";
                 RunCheck.Content = isEng ? "Run Stardew Hub now" : "Запустить Stardew Hub сейчас";
-                // Проверьте, есть ли ReadmeCheck в XAML, в прошлом файле его не было
                 if (ReadmeCheck != null) ReadmeCheck.Content = isEng ? "Open Readme.txt" : "Открыть Readme.txt";
             }
 
@@ -165,34 +164,26 @@ namespace StardewHubInstaller
 
         private void LangBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Проверяем, что окно загружено и элементы управления созданы
             if (!this.IsLoaded || TxtSelectLang == null) return;
 
             ApplyLocalization(LangBox.SelectedIndex == 0);
         }
 
-        // Добавьте этот метод в MainWindow.xaml.cs
         private void LangBox_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (!LangBox.IsDropDownOpen)
             {
                 LangBox.IsDropDownOpen = true;
-                e.Handled = true; // Блокируем клик только для открытия
+                e.Handled = true;
             }
-            // Если список уже открыт, мы НЕ пишем e.Handled = true, 
-            // чтобы WPF мог обработать выбор элемента (SelectedIndex).
         }
 
         private void AnimatePage(Grid page, TranslateTransform transform, bool isForward)
         {
-            // Устанавливаем начальную позицию: 
-            // Если идем вперед — страница залетает справа (100)
-            // Если идем назад — страница залетает слева (-100)
             double startPos = isForward ? 100 : -100;
             transform.X = startPos;
             page.Opacity = 0;
 
-            // Анимация перемещения к нулю (центру)
             DoubleAnimation slide = new DoubleAnimation
             {
                 From = startPos,
@@ -201,7 +192,6 @@ namespace StardewHubInstaller
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
-            // Анимация появления (прозрачность)
             DoubleAnimation fade = new DoubleAnimation
             {
                 From = 0,
@@ -280,11 +270,8 @@ namespace StardewHubInstaller
 
         private async Task ExtractResource(Assembly assembly, string resName, string destPath)
         {
-            // 1. Use 'string?' for resName if it could be null (Fixes CS8600)
-            // 2. Use 'Stream?' for the resource stream because it might not be found
             using (Stream? s = assembly.GetManifestResourceStream(resName))
             {
-                // 3. Check for null before using the stream (Fixes CS8602)
                 if (s == null)
                 {
                     throw new FileNotFoundException($"Resource '{resName}' not found in assembly.");
@@ -339,8 +326,6 @@ namespace StardewHubInstaller
                 string shortcutPath = Path.Combine(desktopPath, "Stardew Hub.lnk");
                 IShellLinkW shortcut = (IShellLinkW)new ShellLink();
                 shortcut.SetPath(targetExePath);
-
-                // Fix for CS8604
                 string? workingDir = Path.GetDirectoryName(targetExePath);
                 shortcut.SetWorkingDirectory(workingDir ?? string.Empty);
 
@@ -410,4 +395,5 @@ namespace StardewHubInstaller
         void Resolve(IntPtr hwnd, int fFlags);
         void SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
     }
+
 }
