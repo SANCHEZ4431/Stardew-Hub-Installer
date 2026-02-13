@@ -1,0 +1,329 @@
+﻿<Window x:Class="StardewHubInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Stardew Hub Installer"
+        Width="680" Height="450"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="{DynamicResource MainCustomFont}">
+
+    <Window.Resources>
+        <FontFamily x:Key="MainCustomFont">/StardewHubInstaller;component/#Carter One MultiCyr</FontFamily>
+        <SolidColorBrush x:Key="AccentColor" Color="#FF7B52AB"/>
+        <SolidColorBrush x:Key="AccentHover" Color="#FF9369D1"/>
+
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AccentHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="15">
+                            <Path x:Name="path" Data="M0,0 L10,10 M0,10 L10,0" 
+                                  Stroke="White" StrokeThickness="2" 
+                                  HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#44FF4444"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LangBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder" 
+                        Background="{TemplateBinding Background}" 
+                        BorderThickness="0" 
+                        CornerRadius="8" 
+                        Margin="4,2"
+                        SnapsToDevicePixels="True">
+                            <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#3F3F46"/>
+                            </Trigger>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource AccentColor}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource AccentHover}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Background" Value="#22FFFFFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="1" CornerRadius="8"/>
+                            <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                              VerticalAlignment="Center" Margin="12,0,30,0" IsHitTestVisible="false"/>
+                            <Path Data="M0,0 L4,4 L8,0" Stroke="White" StrokeThickness="2" 
+                                  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <Popup x:Name="PART_Popup" AllowsTransparency="true" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom">
+                                <Border Background="#FF2D1B4E" BorderBrush="#44FFFFFF" BorderThickness="1" CornerRadius="8" MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer x:Name="DropDownScrollViewer">
+                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid x:Name="mark" Width="20" Height="20" Margin="0,0,10,0">
+                                <Border x:Name="box" CornerRadius="5" Background="#22FFFFFF" BorderBrush="#44FFFFFF" BorderThickness="1.5"/>
+                                <Path x:Name="CheckMark" Data="M4,10 L8,14 L16,6" Stroke="White" StrokeThickness="2.5" Visibility="Collapsed" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Grid>
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="box" Property="Background" Value="{StaticResource AccentColor}"/>
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="box" Property="BorderBrush" Value="{StaticResource AccentHover}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="FontFamily" Value="{StaticResource MainCustomFont}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#AAFFFFFF"/>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="24" BorderThickness="1.5" BorderBrush="#33FFFFFF">
+        <Border.Background>
+            <RadialGradientBrush Center="0.5,0" GradientOrigin="0.5,0" RadiusX="1.3" RadiusY="1.3">
+                <GradientStop Color="#CC351F5C" Offset="0"/>
+                <GradientStop Color="#CC0D0818" Offset="1"/>
+            </RadialGradientBrush>
+        </Border.Background>
+
+        <Grid Margin="35">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="70"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="TxtTitle" Text="Stardew Hub Setup" VerticalAlignment="Center" FontSize="13" Foreground="#88FFFFFF"/>
+                </StackPanel>
+                <Button Style="{StaticResource CloseButtonStyle}" HorizontalAlignment="Right" Click="Close_Click"/>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0,20">
+                <Grid x:Name="LanguagePage">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="LangTransform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock x:Name="TxtSelectLang" Text="Select Language" FontSize="26" FontWeight="Bold" Foreground="White" Margin="0,0,0,5" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="TxtSelectLangSub" Text="Select the installation language" FontSize="14" Foreground="#66FFFFFF" Margin="0,0,0,30" HorizontalAlignment="Center"/>
+                        <ComboBox x:Name="LangBox" Width="260" Height="45" SelectedIndex="0" ItemContainerStyle="{StaticResource LangBoxItemStyle}" SelectionChanged="LangBox_SelectionChanged" PreviewMouseLeftButtonDown="LangBox_PreviewMouseLeftButtonDown" Background="#2D2D30" Foreground="White" BorderThickness="1" BorderBrush="#444444">
+                            <ComboBox.Resources>
+                                <Style TargetType="ContextMenu">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ContextMenu">
+                                                <Border Background="#252525" CornerRadius="10" BorderThickness="1" BorderBrush="#444444">
+                                                    <ItemsPresenter />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#252525" />
+                            </ComboBox.Resources>
+                                <ComboBoxItem Content="English"/>
+                                <ComboBoxItem Content="Русский"/>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page1" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page1Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtWelcome" Text="Добро пожаловать" FontSize="36" FontWeight="Bold" Foreground="White"/>
+                        <Rectangle Width="50" Height="5" Fill="{StaticResource AccentColor}" HorizontalAlignment="Left" Margin="0,20,0,25" RadiusX="2" RadiusY="2"/>
+                        <TextBlock x:Name="TxtWelcomeSub" Text="Этот мастер поможет вам установить приложение Stardew Hub на ваш компьютер." FontSize="16" Foreground="#AAFFFFFF" TextWrapping="Wrap" LineHeight="24"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page2" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page2Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtPathTitle" Text="Путь установки" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,25"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="PathBox" Height="45" VerticalContentAlignment="Center" Background="#11FFFFFF" BorderBrush="#22FFFFFF" Padding="15,0" Foreground="White"/>
+                            <Button Grid.Column="1" x:Name="PathBoxSelect" Content="Обзор..." Width="90" Height="45" Margin="10,0,0,0" Click="Browse_Click" Style="{StaticResource ModernButton}" Background="#22FFFFFF"/>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page3" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page3Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtOptionsTitle" Text="Параметры" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
+                        <Border Background="#11FFFFFF" CornerRadius="12" Padding="20">
+                            <CheckBox x:Name="DotNetCheck" Content="Установить .NET Runtime 8.0 (рекомендуется)" IsChecked="True"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page4" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page4Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtSummaryTitle" Text="Все готово" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
+                        <Border Background="#0DFFFFFF" CornerRadius="12" Padding="20" BorderBrush="#11FFFFFF" BorderThickness="1">
+                            <TextBlock x:Name="SummaryText" Text="..." Foreground="#AAFFFFFF" TextWrapping="Wrap" FontSize="14" LineHeight="20"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page5" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page5Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="StatusLabel" Text="Установка компонентов..." FontSize="16" Foreground="White" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+                        <Grid>
+                            <ProgressBar x:Name="InstallBar" Height="12" Foreground="{StaticResource AccentColor}" Background="#11FFFFFF" BorderThickness="0">
+                                <ProgressBar.Template>
+                                    <ControlTemplate TargetType="ProgressBar">
+                                        <Grid>
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6"/>
+                                            <Border x:Name="PART_Indicator" Background="{TemplateBinding Foreground}" CornerRadius="6" HorizontalAlignment="Left"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ProgressBar.Template>
+                            </ProgressBar>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="Page6" Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform x:Name="Page6Transform"/>
+                    </Grid.RenderTransform>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtFinalTitle" Text="Готово!" FontSize="36" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="TxtFinalStage" Text="Приложение успешно установлено." FontSize="16" Foreground="#88FFFFFF" Margin="0,0,0,25"/>
+                        <StackPanel>
+                            <CheckBox x:Name="ShortcutCheck" Content="Создать ярлык на рабочем столе" IsChecked="True" Margin="0,5"/>
+                            <CheckBox x:Name="ReadmeCheck" Content="Открыть Readme.txt" Foreground="White" Margin="0,0,0,5" IsChecked="True"/>
+                            <CheckBox x:Name="RunCheck" Content="Запустить Stardew Hub прямо сейчас" IsChecked="True" Margin="0,5"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button x:Name="BackBtn" Content="Назад" Width="110" Height="45" Click="Back_Click" Visibility="Collapsed" Style="{StaticResource SecondaryButton}"/>
+                <Button x:Name="NextBtn" Content="Далее" Width="150" Height="45" Margin="15,0,0,0" Click="Next_Click" Style="{StaticResource ModernButton}">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#FF7B52AB" BlurRadius="15" ShadowDepth="2" Opacity="0.3"/>
+                    </Button.Effect>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
